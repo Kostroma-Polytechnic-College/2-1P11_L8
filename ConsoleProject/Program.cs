@@ -8,16 +8,25 @@ using System.Threading.Tasks;
 
 namespace ConsoleProject
 {
+    struct Body
+    {
+        public char symbol;
+        public ConsoleColor color;
+    }
     class Program
     {
         static Random rnd = new Random();
         static int h, w;
-        static char[] snake_create()
+        static Body[] snake_create()
         {
-            char[] snake = new char[rnd.Next(3, h / 2)];
+            Body[] snake = new Body[rnd.Next(3, h / 2)];
             for (int j = 0; j < snake.Length; j++)
             {
-                snake[j] = (char)rnd.Next('A', 'z' + 1);
+                snake[j] = new Body()
+                {
+                    symbol = (char)rnd.Next('A', 'z' + 1),
+                    color = (ConsoleColor)rnd.Next(1, 16)
+                };
             }
             return snake;
         }
@@ -28,7 +37,7 @@ namespace ConsoleProject
             h = Console.WindowHeight-2;
             w = Console.WindowWidth;
             //int[,] room = new int[h, w];
-            char[][] snakes = new char[w][];
+            Body[][] snakes = new Body[w][];
             
             for (int i = 0; i < snakes.Length; i++)
             {
@@ -46,11 +55,8 @@ namespace ConsoleProject
                         && locations[j] >= i)
                     {
                         Console.SetCursorPosition(j, i);
-                        if (locations[j] - i == 0)
-                            Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write(snakes[j][locations[j] - i]);
-                        if (locations[j] - i == 0)
-                            Console.ForegroundColor = ConsoleColor.Green;
+                        Console.ForegroundColor = snakes[j][locations[j] - i].color;
+                        Console.Write(snakes[j][locations[j] - i].symbol);
                     }
                     if (locations[j] - snakes[j].Length == i)
                     {
